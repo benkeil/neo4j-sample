@@ -216,11 +216,7 @@ RETURN l, f, s<!--/code--></pre>
 
 
    <h4>Get all dependencies of a specific service</h4>
-   <select style="display:inline;width:30%;" value-for="name" class="form-control">
-    <option>currency-service-v1</option>
-    <option>mls-report-service-v1</option>
-    <option>payment-rules-service-v1</option>
-</select>
+   <input style="display:inline;width:30%;" value-for="name" class="form-control" value="mls-report-service-v1" size="80">
 <div class="listingblock">
 <div class="content">
 <pre mode="cypher"  class="highlight pre-scrollable programlisting cm-s-neo code runnable standalone-example ng-binding" data-lang="cypher" lang="cypher"><!--code class="cypher language-cypher"-->MATCH (s:Service)-[:HAS_DEPENDENCY]-&gt;(d)

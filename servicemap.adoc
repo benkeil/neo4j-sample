@@ -135,12 +135,10 @@ RETURN l, f, s
 
 === Get all dependencies of a specific service
 
+:name: pass:a['<span value-key="name">mls-report-service-v1</span>']
+
 ++++
-<select style="display:inline;width:30%;" value-for="name" class="form-control">
-    <option>currency-service-v1</option>
-    <option>mls-report-service-v1</option>
-    <option>payment-rules-service-v1</option>
-</select>
+<input style="display:inline;width:30%;" value-for="name" class="form-control" value="mls-report-service-v1" size="80">
 ++++
 
 [source,cypher]
