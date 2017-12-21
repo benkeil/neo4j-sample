@@ -1,0 +1,169 @@
+= Service Map Example
+
+== Creating Data
+
+[source,cypher]
+----
+//
+// General
+//
+
+CREATE (Php:Language {name:'PHP'})
+CREATE (Java:Language {name:'Java'})
+
+CREATE (Camel:Framework {name:'Camel'})
+CREATE (Classic:Framework {name:'Classic'})
+CREATE (Scm:Framework {name:'SCM'})
+CREATE (Spring:Framework {name:'Spring'})
+CREATE (SprinBoot:Framework {name:'Sprin Boot'})
+CREATE (Symfony:Framework {name:'Symfony'})
+
+CREATE
+    (Classic)-[:IS_WRITTEN_IN]->(Php),
+    (Scm)-[:IS_WRITTEN_IN]->(Php),
+    (Symfony)-[:IS_WRITTEN_IN]->(Php),
+    (Spring)-[:IS_WRITTEN_IN]->(Java),
+    (Camel)-[:IS_WRITTEN_IN]->(Java),
+    (SprinBoot)-[:IS_WRITTEN_IN]->(Java)
+
+//
+// Services
+//
+
+CREATE (Nfs:Nfs {name:'NFS'})
+
+CREATE (Mail:Mail {name:'Mail'})
+
+CREATE (SedoDb2:Database {name:'sedodb2'})
+CREATE (SedoDb5:Database {name:'sedodb5'})
+CREATE (SedoDb40:Database {name:'sedodb40'})
+
+CREATE (CurrencyServiceV1:Service {name:'Currency Service V1', fqdn:'currency-service-v1'})
+CREATE (CustomerServiceV3:Service {name:'Customer Service V3', fqdn:'customer-service-v3'})
+CREATE (DnsServiceV1:Service {name:'DNS Service V1', fqdn:'dns-service-v1'})
+CREATE (DomainDeletionServiceV1:Service {name:'Domain Deletion Service V1', fqdn:'domain-deletion-service-v1'})
+CREATE (MlsReportServiceV1:Service {name:'Mls Report Service V1', fqdn:'mls-report-service-v1'})
+CREATE (ParkingPayoutServiceV1:Service {name:'Parking Payout Service V1', fqdn:'parking-payout-service-v1'})
+CREATE (PartnerProgramServiceV1:Service {name:'Partner Program Service V1', fqdn:'partner-program-service-v1'})
+CREATE (PaymentRulesServiceV1:Service {name:'Payment Rules Service V1', fqdn:'payment-rules-service-v1'})
+CREATE (SomePhpServiceV1:Service {name:'Some Php Service V1', fqdn:'some-php-service-v1'})
+
+CREATE
+    (CurrencyServiceV1)-[:HAS_DEPENDENCY]->(SedoDb2),
+    (CurrencyServiceV1)-[:HAS_FRAMEWORK]->(Spring)
+
+CREATE
+    (CustomerServiceV3)-[:HAS_DEPENDENCY]->(SedoDb2),
+    (CustomerServiceV3)-[:HAS_FRAMEWORK]->(Spring)
+
+CREATE
+    (DnsServiceV1)-[:HAS_FRAMEWORK]->(Spring)
+
+CREATE
+    (DomainDeletionServiceV1)-[:HAS_DEPENDENCY]->(SedoDb2),
+    (DomainDeletionServiceV1)-[:HAS_FRAMEWORK]->(Symfony)
+
+CREATE
+    (MlsReportServiceV1)-[:HAS_DEPENDENCY]->(SedoDb2),
+    (MlsReportServiceV1)-[:HAS_DEPENDENCY]->(Nfs),
+    (MlsReportServiceV1)-[:HAS_DEPENDENCY]->(Mail),
+    (MlsReportServiceV1)-[:HAS_FRAMEWORK]->(Camel)
+
+CREATE
+    (ParkingPayoutServiceV1)-[:HAS_DEPENDENCY]->(SedoDb40),
+    (ParkingPayoutServiceV1)-[:HAS_FRAMEWORK]->(Spring)
+
+CREATE
+    (PartnerProgramServiceV1)-[:HAS_DEPENDENCY]->(SedoDb2),
+    (PartnerProgramServiceV1)-[:HAS_FRAMEWORK]->(Spring)
+
+CREATE
+    (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]->(CurrencyServiceV1),
+    (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]->(CustomerServiceV3),
+    (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]->(ParkingPayoutServiceV1),
+    (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]->(PartnerProgramServiceV1),
+    (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]->(SedoDb5),
+    (PaymentRulesServiceV1)-[:HAS_FRAMEWORK]->(Camel)
+----
+
+== Update database
+
+=== Adding a new Service
+
+[source,cypher]
+----
+MERGE (SomePhpServiceV1:Service {name:'Some Php Service V1', fqdn:'some-php-service-v1'})
+WITH SomePhpServiceV1
+MATCH (Classic:Framework {name:'Classic'}), (PaymentRulesServiceV1:Service {fqdn:'payment-rules-service-v1'})
+MERGE (SomePhpServiceV1)-[:HAS_FRAMEWORK]->(Classic)
+MERGE (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]->(SomePhpServiceV1)
+RETURN SomePhpServiceV1, PaymentRulesServiceV1, Classic
+----
+
+=== Get everything
+
+[source,cypher]
+----
+MATCH (n) RETURN n
+----
+
+== Querying
+
+=== Return a specific service
+
+[source,cypher]
+----
+MATCH (s:Service {fqdn: 'currency-service-v1'}) RETURN s
+----
+
+=== Get all services that have a database as dependency
+
+[source,cypher]
+----
+MATCH (s)-->(d:Database)
+RETURN s, d
+----
+
+=== Get all services that are written in a specific language
+
+[source,cypher]
+----
+MATCH (l:Language)<--(f:Framework)<--(s:Service)
+WHERE l.name = 'PHP'
+RETURN l, f, s
+----
+
+=== Get all dependencies of a specific service
+
+++++
+<select style="display:inline;width:30%;" value-for="name" class="form-control">
+    <option>currency-service-v1</option>
+    <option>mls-report-service-v1</option>
+    <option>payment-rules-service-v1</option>
+</select>
+++++
+
+[source,cypher]
+----
+MATCH (s:Service)-[:HAS_DEPENDENCY]->(d)
+WHERE s.fqdn = {name}
+RETURN s, d
+----
+
+== Exporting
+
+=== Export a list of all service names and their dependencies
+
+[source,cypher]
+----
+MATCH (s:Service)-[:HAS_DEPENDENCY]->(d)
+RETURN s.fqdn, d.name
+----
+
+=== ... as a list
+
+[source,cypher]
+----
+MATCH (s:Service)-[:HAS_DEPENDENCY]->(d)
+RETURN s.fqdn, collect(d.name)
+----
