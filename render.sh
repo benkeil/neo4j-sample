@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR=${0%%/run.sh}
+DIR=${0%%/render.sh}
 
 function render {
     ADOC=${1}
