@@ -135,10 +135,18 @@ RETURN l, f, s
 
 === Get all dependencies of a specific service
 
-[source,cypher]
+:name: pass:a['<span value-key="name">mls-report-service-v1</span>']
+
+We use a form field here:
+
+++++
+<input style="display:inline;width:30%;" value-for="name" class="form-control" value="mls-report-service-v1" size="40">
+++++
+
+[source,cypher,subs=attributes]
 ----
 MATCH (s:Service)-[:HAS_DEPENDENCY]->(d)
-WHERE s.fqdn = 'mls-report-service-v1'
+WHERE s.fqdn = {name}
 RETURN s, d
 ----
 
