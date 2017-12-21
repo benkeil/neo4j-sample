@@ -2,14 +2,14 @@
 
 http://neo4j.com/docs/developer-manual/current/
 
-## Requirements
+## Requirements for creating a guide
 
 ```bash
 brew install asciidoctor
 sudo gem install tilt thread_safe
 ```
 
-## Run Docker
+## Run Neo4j in docker
 
     docker run -p 7474:7474 -p 7687:7687 -it -v $(pwd)/docker/neo4j/conf:/var/lib/neo4j/conf neo4j
 
