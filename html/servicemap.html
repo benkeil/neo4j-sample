@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.6.1">
-<title>Service Map Example</title>
+<title>Service Map Sample</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -430,11 +430,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 </div>
 <div id="content">
-<div class="sect1">
-<h2 id="_service_map_example">Service Map Example</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_creating_data">Creating Data</h3>
+<h3 id="_service_map_sample">Service Map Sample</h3>
+<div class="sect3">
+<h4 id="_creating_data">Creating Data</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-cypher" data-lang="cypher">//
@@ -517,6 +516,7 @@ CREATE
     (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]-&gt;(PartnerProgramServiceV1),
     (PaymentRulesServiceV1)-[:HAS_DEPENDENCY]-&gt;(SedoDb5),
     (PaymentRulesServiceV1)-[:HAS_FRAMEWORK]-&gt;(Camel)</code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -610,12 +610,18 @@ RETURN s.fqdn, collect(d.name)</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_cleanup">Cleanup</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-cypher" data-lang="cypher">MATCH (n) DETACH DELETE n</code></pre>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-12-21 01:28:27 CET
+Last updated 2017-12-21 01:48:49 CET
 </div>
 </div>
 </body>

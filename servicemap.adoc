@@ -1,6 +1,6 @@
-= Service Map Example
+== Service Map Sample
 
-== Creating Data
+=== Creating Data
 
 [source,cypher]
 ----
@@ -166,4 +166,11 @@ RETURN s.fqdn, d.name
 ----
 MATCH (s:Service)-[:HAS_DEPENDENCY]->(d)
 RETURN s.fqdn, collect(d.name)
+----
+
+== Cleanup
+
+[source,cypher]
+----
+MATCH (n) DETACH DELETE n
 ----
