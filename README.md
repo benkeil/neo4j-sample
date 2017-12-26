@@ -26,3 +26,17 @@ Format the query to json
 Send it to the REST api
 
     cat example/currency-service-v1.cql | jq -Rs -f jq.statement.json | curl -H "Accept: application/json" -H "Content-Type: application/json" -d@- http://localhost:7474/db/data/transaction/commit
+
+## Interesting queries
+
+Get all things written in a specific language
+
+```cypher
+match (l:Language)-[*]-(s)
+where l.name in ["java", "php"] and (s:Cronjob or s:Service)
+return s
+```
+
+Get everything of "your" service
+
+    match (s {name:"mls-report-service-v1"})-[]-(n) return s,n
