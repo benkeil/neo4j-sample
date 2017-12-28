@@ -27,6 +27,10 @@ Send it to the REST api
 
     cat example/currency-service-v1.cql | jq -Rs -f jq.statement.json | curl -H "Accept: application/json" -H "Content-Type: application/json" -d@- http://localhost:7474/db/data/transaction/commit
 
+Send every file to the REST api
+
+    for file in $(ls example/); do cat example/$file | jq -Rs -f jq.statement.json | curl -H "Accept: application/json" -H "Content-Type: application/json" -d@- http://localhost:7474/db/data/transaction/commit; done
+
 ## Interesting queries
 
 Get all things written in a specific language
